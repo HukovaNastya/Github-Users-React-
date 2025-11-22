@@ -1,0 +1,391 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+a, a:hover, a:visited, a:link, a:active {
+    text-decoration: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.header {
+    background: #24292e;
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.search-section {
+    padding: 30px;
+    background: #f6f8fa;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid #d1d5da;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #0366d6;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: #0366d6;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #0256c7;
+}
+
+.btn-primary:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
+}
+
+.l
+
+.filter-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-label {
+    font-weight: 600;
+    color: #586069;
+}
+
+.filter-input {
+    padding: 8px 12px;
+    border: 2px solid #d1d5da;
+    border-radius: 6px;
+    width: 100px;
+}
+
+.recent-searches {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.recent-tag {
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid #d1d5da;
+    border-radius: 16px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.recent-tag:hover {
+    background: #0366d6;
+    color: white;
+    border-color: #0366d6;
+}
+
+.content {
+    padding: 30px;
+}
+
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #586069;
+}
+
+.loading::after {
+    content: '...';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: '.'; }
+    40% { content: '..'; }
+    60%, 100% { content: '...'; }
+}
+
+.error {
+    padding: 20px;
+    background: #ffeef0;
+    border: 1px solid #f97583;
+    border-radius: 6px;
+    color: #d73a49;
+    margin-bottom: 20px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #586069;
+}
+
+.empty-state svg {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+    opacity: 0.3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th {
+    background: #f6f8fa;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+    color: #24292e;
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 2px solid #e1e4e8;
+    transition: background 0.2s;
+}
+
+th:hover {
+    background: #e1e4e8;
+}
+
+.sort-icon {
+    margin-left: 8px;
+    opacity: 0.4;
+    font-size: 12px;
+}
+
+.sort-icon.active {
+    opacity: 1;
+    color: #0366d6;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+tr:hover {
+    background: #f6f8fa;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #e1e4e8;
+}
+
+.username {
+    font-weight: 600;
+    color: #0366d6;
+}
+
+.profile-link {
+    color: #0366d6;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.profile-link:hover {
+    text-decoration: underline;
+}
+
+.btn-repos {
+    padding: 6px 12px;
+    background: #fafbfc;
+    border: 1px solid #d1d5da;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-repos:hover {
+    background: #f3f4f6;
+    border-color: #959da5;
+}
+
+.repos-list {
+    padding: 10px 10px 10px 52px;
+}
+
+.repo-item {
+    padding: 8px;
+    background: #f6f8fa;
+    margin-bottom: 6px;
+    border-radius: 6px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.repo-name {
+    color: #0366d6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.repo-name:hover {
+    text-decoration: underline;
+}
+
+.repo-stats {
+    color: #586069;
+    font-size: 12px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    padding: 8px 12px;
+    border: 1px solid #d1d5da;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 40px;
+}
+
+.page-btn:hover:not(:disabled) {
+    background: #0366d6;
+    color: white;
+    border-color: #0366d6;
+}
+
+.page-btn.active {
+    background: #0366d6;
+    color: white;
+    border-color: #0366d6;
+}
+
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.page-info {
+    color: #586069;
+    font-size: 14px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin-top: 100px;
+}
+
+.list li + li {
+    margin-top: 20px;
+}
+
+.list li {
+    padding: 20px;
+    text-decoration: none;
+    cursor: pointer;
+    background-color: #FCFCFD;
+    border-radius: 6px;
+    border-width: 0;
+    box-shadow: rgba(45, 35, 66, 0.2) 0 2px 4px,rgba(45, 35, 66, 0.15) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
+    text-align: center;
+}
+
+.pagination-button:disabled {
+    opacity: 0.5;
+    cursor: none !important;
+}
+
+.pagination-button + .pagination-button {
+    padding-left: 20px;
+}
+
+/*.pagination li + li {*/
+/*    padding-left: 60px;*/
+/*}*/
+
+.pagination-button, .active-pagination-button  {
+    background-color: #FAFBFC;
+    padding: 10px;
+    border: transparent;
+    border-radius: 6px;
+    box-shadow: 3px 3px 12px #c5c5c5,
+    -6px -6px 12px #ffffff;
+}
+
+.pagination-button:hover {
+    cursor: pointer;
+}
+
+.active-pagination-button {
+    background: #0256c7;
+    COLOR: #fff;
+}
+
+
