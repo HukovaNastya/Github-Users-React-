@@ -1,47 +1,23 @@
-import { useCallback, useRef, useState, useEffect } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { getUserByLogin, searchUsers } from '../services/githubUser.service.js'
-import localStorageService from './useStorage.js'
-import { useNavigate, useLocation } from 'react-router-dom'
+import localStorageService from '../hooks/useStorage'
 
 const storageKeys = localStorageService.LOCAL_STORAGE_KEYS
 
 function useUsersSearch() {
-  const location = useLocation()
-  const params = new URLSearchParams(location.search)
-  // TODO: remove
-  const searchValue = params.get('query') || null
-  const pageFromURL = Number(params.get('page')) || 1
-  const perPageFromURL = Number(params.get('perPage')) || 5
-  // TODO: remove
-  const didMountRef = useRef(false)
-
-  // TODO: remove
-  useEffect(() => {
-    if (!searchValue) return
-    if (didMountRef.current) {
-      getListOfUsers(searchValue, pageFromURL, perPageFromURL)
-    } else {
-      didMountRef.current = true
-    }
-  }, [searchValue, pageFromURL, perPageFromURL])
-
-  const searchStateRef = useRef({ value: searchValue || '' })
+  const searchStateRef = useRef({ value: '' })
 
   const [usersInfo, setUsersInfo] = useState(() => {
-    // const users = localStorageService.getItem(storageKeys.Users)
-    // return users || { items: [], meta: { totalCount: 0 } }
-    return { items: [], meta: { totalCount: 0 } }
+    const users = localStorageService.getItem(storageKeys.Users)
+    return users || { items: [], meta: { totalCount: 0 } }
+    // return { items: [], meta: { totalCount: 0 } }
   })
 
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
-  const getListOfUsers = async (
-    value,
-    page = pageFromURL,
-    perPage = perPageFromURL,
-  ) => {
+  const getListOfUsers = async (value, page, perPage) => {
     setLoading(true)
     setError(null)
 
@@ -59,13 +35,9 @@ function useUsersSearch() {
 
       setUsersInfo(newUsersInfo)
       searchStateRef.current.value = value
-      const newURL = `/search?query=${encodeURIComponent(value)}&page=${page}&perPage=${perPage}`
-      if (location.pathname + location.search !== newURL) {
-        navigate(newURL, { replace: false })
-      }
-      // TODO: move to SearchSection component
+
       localStorageService.setItem(storageKeys.Users, newUsersInfo)
-      // TODO: return newUsersInfo
+      return newUsersInfo
     } catch (err) {
       setError(err.message || 'Failed to fetch users')
     } finally {
@@ -73,7 +45,7 @@ function useUsersSearch() {
     }
   }
 
-  const handleSearch = useCallback(async (searchValue, page = pageFromURL) => {
+  const handleSearch = useCallback(async (searchValue, page) => {
     if (!searchValue) {
       setError('Please enter the value before searching!')
       return
@@ -85,10 +57,7 @@ function useUsersSearch() {
   }, [])
 
   // Change page
-  const paginate = async (
-    pageNumber = pageFromURL,
-    perPage = perPageFromURL,
-  ) => {
+  const paginate = async (pageNumber, perPage) => {
     await getListOfUsers(searchStateRef.current.value, pageNumber, perPage)
   }
 
@@ -98,9 +67,8 @@ function useUsersSearch() {
     error,
     handleSearch,
     paginate,
-    perPageFromURL,
-    searchValue,
-    pageFromURL,
+    searchStateRef,
+    getListOfUsers,
   }
 }
 

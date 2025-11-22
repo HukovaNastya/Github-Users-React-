@@ -14,7 +14,7 @@ const SearchForm = ({ onSubmit, searchValue = '' }) => {
       <div className="search-box">
         <input
           ref={inputRef}
-          defaultValue={searchValue} // Use defaultValue for uncontrolled input
+          defaultValue={searchValue}
           autoComplete="off"
           className="search-input"
           id="searchInput"
