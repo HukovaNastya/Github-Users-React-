@@ -19,28 +19,15 @@ const SearchSection = () => {
     getListOfUsers,
   } = useUsersSearch()
 
-  console.log(usersInfo)
-
-  // const location = useLocation()
-  // const params = new URLSearchParams(location.search)
-  // // TODO: remove
-  // const searchValue = params.get('query') || null
-  // const pageFromURL = Number(params.get('page')) || 1
-  // const perPageFromURL = Number(params.get('perPage')) || 5
-
-  // Use useSearchParams hook from react-router-dom
-  // https://reactrouter.com/api/hooks/useSearchParams
-  // Move all URL manipulation logic here
-  // searchParams.get("query")
-
-  // const [currentPage, setCurrentPage] = useState(pageFromURL)
   const { value } = searchStateRef.current
 
   let [searchParams, setSearchParams] = useSearchParams()
 
-  const queryFromURL = searchParams.get('query') || value
-  const pageFromURL = Number(searchParams.get('page')) || 1
-  const perPageFromURL = Number(searchParams.get('perPage')) || 5
+  let queryFromURL = searchParams.get('query') || value
+  let pageFromURL = Number(searchParams.get('page')) || 1
+  let perPageFromURL = Number(searchParams.get('perPage')) || 5
+
+
 
   const [currentPage, setCurrentPage] = useState(pageFromURL)
 
@@ -82,9 +69,12 @@ const SearchSection = () => {
     [paginate, setSearchParams, value],
   )
 
-  useEffect(() => {
-    getListOfUsers(queryFromURL, perPageFromURL, perPageFromURL)
-  }, [queryFromURL, perPageFromURL, perPageFromURL])
+  // useEffect(() => {
+  //   if (!queryFromURL) return;
+  //   handleSearch(queryFromURL, pageFromURL, perPageFromURL);
+  //   paginate(pageFromURL, perPageFromURL);
+  //
+  // }, [queryFromURL, pageFromURL, perPageFromURL]);
 
   // TODO: add handler for handleSearch function here, to handle URL query
   // setSearchParams({ query: searchValue, page: currentPage, perPage  });
