@@ -31,8 +31,6 @@ const SearchSection = () => {
   let pageFromURL = Number(searchParams.get('page')) || 1
   let perPageFromURL = Number(searchParams.get('perPage')) || 5
 
-
-
   const [currentPage, setCurrentPage] = useState(pageFromURL);
 
   useEffect(() => {
@@ -40,20 +38,8 @@ const SearchSection = () => {
     handleSearch(queryFromURL, pageFromURL, perPageFromURL)
   }, [])
 
-  // useEffect(() => {
-  //   if (!queryFromURL) return
-  //
-  //   if (pageFromURL === 1) {
-  //     handleSearch(queryFromURL, pageFromURL, perPageFromURL)
-  //   } else {
-  //     paginate(pageFromURL, perPageFromURL)
-  //   }
-  //
-  //   setCurrentPage(pageFromURL)
-  // }, [searchParams])
-
   const handleUserSearch = async (valueFromForm) => {
-    if (!valueFromForm.trim()) return; // avoid empty search
+    if (!valueFromForm) return;
 
     setCurrentPage(1);
 
@@ -67,31 +53,23 @@ const SearchSection = () => {
   }
 
   const handlePageChange = useCallback(
-    async (page, perPage) => {
+    async (page) => {
       setCurrentPage(page)
 
       setSearchParams({
         query: queryFromURL,
-        page:pageFromURL,
+        page,
         perPage:perPageFromURL,
       })
 
-      await paginate(page, perPage)
+      await paginate(page, perPageFromURL)
     },
-    [paginate, setSearchParams, queryFromURL, perPageFromURL, pageFromURL],
+    [paginate, setSearchParams],
   )
-
-  // TODO: add handler for handleSearch function here, to handle URL query
-  // setSearchParams({ query: searchValue, page: currentPage, perPage  });
-  // handleSearch(...)
-
-  // TODO: move paginate function from the hook to this component
 
   return (
     <>
       <SearchFormMemo onSubmit={handleUserSearch} searchValue={queryFromURL} />
-      {/*<SearchFormMemo onSubmit={handleSearch} searchValue={searchValue} />*/}
-
       {usersInfo.items?.length && !loading ? (
         <Table
           theadData={[
