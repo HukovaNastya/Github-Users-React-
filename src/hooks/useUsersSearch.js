@@ -45,7 +45,7 @@ function useUsersSearch() {
     }
   }
 
-  const handleSearch = useCallback(async (searchValue, page) => {
+  const handleSearch = useCallback(async (searchValue, page, perPage) => {
     if (!searchValue) {
       setError('Please enter the value before searching!')
       return
@@ -53,7 +53,7 @@ function useUsersSearch() {
 
     setUsersInfo({ items: [], meta: { totalCount: 0 } })
 
-    await getListOfUsers(searchValue, page)
+    await getListOfUsers(searchValue, page, perPage)
   }, [])
 
   // Change page
