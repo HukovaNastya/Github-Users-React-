@@ -17,17 +17,21 @@ const SearchSection = () => {
     handleSearch,
     paginate,
     searchStateRef,
+    previousSearchRef,
   } = useUsersSearch()
 
   console.log(usersInfo)
 
   const { value } = searchStateRef.current
+  const previousSearch = previousSearchRef.current
+
+  console.log(' previousSearchRef',  previousSearchRef.current)
 
   console.log(value)
 
   let [searchParams, setSearchParams] = useSearchParams()
 
-  let queryFromURL = searchParams.get('query') ?? value
+  let queryFromURL = searchParams.get('query') || value
   let pageFromURL = Number(searchParams.get('page')) || 1
   let perPageFromURL = Number(searchParams.get('perPage')) || 5
 
@@ -37,6 +41,18 @@ const SearchSection = () => {
     if (!queryFromURL) return
     handleSearch(queryFromURL, pageFromURL, perPageFromURL)
   }, [])
+
+  const showPreviousSearch = async(prevValue) => {
+    setSearchParams({
+      query: prevValue,
+      page: 1,
+      perPage:perPageFromURL,
+    })
+    searchStateRef.current.value = prevValue
+    queryFromURL = prevValue
+    await handleSearch(prevValue, 1, perPageFromURL);
+
+  }
 
   const handleUserSearch = async (valueFromForm) => {
     if (!valueFromForm) return;
@@ -67,9 +83,17 @@ const SearchSection = () => {
     [paginate, setSearchParams],
   )
 
+  console.log('searchStateRef', queryFromURL)
+
   return (
     <>
-      <SearchFormMemo onSubmit={handleUserSearch} searchValue={queryFromURL} />
+      <SearchFormMemo onSubmit={handleUserSearch} searchValue={queryFromURL}  />
+      {previousSearch ? (
+        <div className='previous-search' onClick={() => showPreviousSearch(previousSearch)}>
+          {previousSearch || null}
+        </div>
+      ) : null }
+
       {usersInfo.items?.length && !loading ? (
         <Table
           theadData={[

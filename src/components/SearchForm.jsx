@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 
 const SearchForm = ({ onSubmit, searchValue = '' }) => {
-  const inputRef = useRef()
+  const inputRef = useRef(searchValue)
 
   return (
     <form

@@ -385,7 +385,15 @@ tr:hover {
 
 .active-pagination-button {
     background: #0256c7;
-    COLOR: #fff;
+    color: #fff;
 }
 
+.previous-search {
+    background: #0256c7;
+    color: #fff;
+    padding: 8px 20px;
+    max-width: 100px;
+    border-radius: 8px;
+    margin-left: 30px;
+}
 
