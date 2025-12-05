@@ -6,12 +6,12 @@ import useUsersSearch from '../hooks/useUsersSearch.js'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import UserHistory from './UserHistory'
-import localStorageService from '../hooks/useStorage'
+import useSearchHistory from '../hooks/useSearchHistory'
 
 const SearchFormMemo = memo(SearchForm)
 const AlertMemo = memo(Alert)
-const storageKeys = localStorageService.LOCAL_STORAGE_KEYS
 
+const PER_PAGE = 5;
 
 const SearchSection = () => {
   const {
@@ -20,92 +20,56 @@ const SearchSection = () => {
     error,
     handleSearch,
     paginate,
-    searchStateRef,
-    previousSearchRef,
   } = useUsersSearch()
+  console.log('Re-render SearchSection')
 
-  const { value } = searchStateRef.current
-  let previousSearch = previousSearchRef.current
-
-  let [searchParams, setSearchParams] = useSearchParams()
-
-  let queryFromURL = searchParams.get('query') || value
-  let pageFromURL = Number(searchParams.get('page')) || 1
-  let perPageFromURL = Number(searchParams.get('perPage')) || 5
-
-  const [currentPage, setCurrentPage] = useState(pageFromURL)
-  const [userHistory, setUserHistory] = useState(() => {
-    const history = localStorageService.getItem(storageKeys.History)
-    return  history || []
-  })
+  const [searchParams, setSearchParams] = useSearchParams()
+  const { addHistoryItem } = useSearchHistory()
+  const [currentPage, setCurrentPage] = useState(Number(searchParams.get('page') || 1))
 
   useEffect(() => {
-    if (!queryFromURL) return
-    handleSearch(queryFromURL, pageFromURL, perPageFromURL)
-  }, [])
-
-  const showPreviousSearch = async (prevValue) => {
-    setSearchParams({
-      query: prevValue,
-      page: 1,
-      perPage: perPageFromURL,
-    })
-
-    searchStateRef.current.value = prevValue
-    queryFromURL = prevValue
-
-    await handleSearch(prevValue, 1, perPageFromURL)
-  }
-
-  const handleUserSearch = async (valueFromForm) => {
-    if (!valueFromForm) return
-
-    if (previousSearch && !userHistory.includes(previousSearch)) {
-      setUserHistory((prevSearch) => [...prevSearch, previousSearch])
-      localStorageService.setItem(storageKeys.History, [...userHistory, previousSearch])
+    const query = searchParams.get('query') || ''
+    const page = Number(searchParams.get('page') || 1)
+    const perPage = Number(searchParams.get('perPage') || PER_PAGE)
+    if (query) {
+      handleSearch(query, page, perPage)
     }
+  }, [searchParams, handleSearch])
+
+  const handleUserSearch = async (searchValue) => {
+    if (!searchValue) return
+
+    addHistoryItem(searchValue)
 
     setCurrentPage(1)
 
-    setSearchParams({
-      query: valueFromForm,
-      page: 1,
-      perPage: perPageFromURL,
-    })
+    setSearchParams((searchParams) => {
+      searchParams.set('query', searchValue)
+      searchParams.set("page", "1");
+      return searchParams;
+    });
 
-    await handleSearch(valueFromForm, 1, perPageFromURL)
-
-    previousSearchRef.current = valueFromForm
-    searchStateRef.current.value = valueFromForm
+    await handleSearch(searchValue, 1, PER_PAGE)
   }
 
   const handlePageChange = useCallback(
     async (page) => {
       setCurrentPage(page)
 
-      setSearchParams({
-        query: queryFromURL,
-        page,
-        perPage: perPageFromURL,
-      })
+      setSearchParams((searchParams) => {
+        searchParams.set("page", page);
+        return searchParams;
+      });
 
-      await paginate(page, perPageFromURL)
+      await paginate(page, PER_PAGE)
     },
     [paginate, setSearchParams],
   )
 
-  const deleteHistoryItem  = (itemIndex) => {
-    const newHistoryArray = userHistory.filter((item, index) => {
-      return index   !== itemIndex
-    })
-    setUserHistory(newHistoryArray)
-    localStorageService.setItem(storageKeys.History, newHistoryArray)
-  }
-
   return (
     <>
-      <SearchFormMemo onSubmit={handleUserSearch} searchValue={queryFromURL} />
-      <UserHistory userHistoryData={userHistory} refetch={showPreviousSearch} deleteItem={deleteHistoryItem}/>
+      <SearchFormMemo onSubmit={handleUserSearch} searchValue={searchParams.get('query') || ''} />
+      <UserHistory onClick={handleUserSearch} />
       {usersInfo.items?.length && !loading ? (
         <Table
           theadData={[
@@ -129,7 +93,7 @@ const SearchSection = () => {
           currentPage={currentPage}
           totalCount={usersInfo.meta.totalCount}
           onChange={handlePageChange}
-          perPage={perPageFromURL}
+          perPage={PER_PAGE}
         />
       </div>
 

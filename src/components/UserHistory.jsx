@@ -1,16 +1,20 @@
-const UserHistory = ({ userHistoryData, refetch, deleteItem}) => {
+import useSearchHistory from '../hooks/useSearchHistory'
+
+const UserHistory = ({ onClick }) => {
+  const { searchHistory, deleteHistoryItem } = useSearchHistory()
+
   return (
     <>
-      {userHistoryData?.length > 0 ? (
+      {searchHistory.length ? (
         <div className="search-section user_history">
           <h1 className="search-item_title">Recent Searches:</h1>
           <ul className="user_history_list">
-            {userHistoryData.map((item, index) => (
+            {searchHistory.map((item, index) => (
               <li key={index} className='user_history-item'>
-                  <div className="previous-search" onClick={() => refetch(item)}>
+                  <div className="previous-search" onClick={() => onClick(item)}>
                     {item}
                   </div>
-                  <button className="delete-btn" onClick={() => deleteItem(index)}>X</button>
+                  <button className="delete-btn" onClick={() => deleteHistoryItem(item)}>X</button>
               </li>
             ))}
           </ul>

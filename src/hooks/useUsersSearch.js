@@ -6,7 +6,6 @@ const storageKeys = localStorageService.LOCAL_STORAGE_KEYS
 
 function useUsersSearch() {
   const searchStateRef = useRef({ value: '' })
-  const previousSearchRef = useRef('')
 
   const [usersInfo, setUsersInfo] = useState(() => {
     const users = localStorageService.getItem(storageKeys.Users)
@@ -35,7 +34,6 @@ function useUsersSearch() {
 
       setUsersInfo(newUsersInfo)
 
-      previousSearchRef.current = searchStateRef.current.value
       searchStateRef.current.value = value
 
       localStorageService.setItem(storageKeys.Users, newUsersInfo)
@@ -71,7 +69,6 @@ function useUsersSearch() {
     paginate,
     searchStateRef,
     getListOfUsers,
-    previousSearchRef,
   }
 }
 
