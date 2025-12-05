@@ -87,10 +87,17 @@ const SearchSection = () => {
     [paginate, setSearchParams],
   )
 
+  const deleteHistoryItem  = (itemIndex) => {
+    const newHistoryArray = userHistory.filter((item, index) => {
+      return index   !== itemIndex
+    })
+    setUserHistory(newHistoryArray)
+  }
+
   return (
     <>
       <SearchFormMemo onSubmit={handleUserSearch} searchValue={queryFromURL} />
-      <UserHistory userHistoryData={userHistory} refetch={showPreviousSearch} />
+      <UserHistory userHistoryData={userHistory} refetch={showPreviousSearch} deleteItem={deleteHistoryItem}/>
       {usersInfo.items?.length && !loading ? (
         <Table
           theadData={[

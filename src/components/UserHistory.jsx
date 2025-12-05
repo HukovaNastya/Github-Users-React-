@@ -1,4 +1,4 @@
-const UserHistory = ({ userHistoryData, refetch }) => {
+const UserHistory = ({ userHistoryData, refetch, deleteItem}) => {
   return (
     <>
       {userHistoryData?.length > 0 ? (
@@ -6,10 +6,11 @@ const UserHistory = ({ userHistoryData, refetch }) => {
           <h1 className="search-item_title">Recent Searches:</h1>
           <ul className="user_history_list">
             {userHistoryData.map((item, index) => (
-              <li key={index}>
-                <div className="previous-search" onClick={() => refetch(item)}>
-                  {item}
-                </div>
+              <li key={index} className='user_history-item'>
+                  <div className="previous-search" onClick={() => refetch(item)}>
+                    {item}
+                  </div>
+                  <button className="delete-btn" onClick={() => deleteItem(index)}>X</button>
               </li>
             ))}
           </ul>
