@@ -99,7 +99,7 @@ const SearchSection = () => {
       return index   !== itemIndex
     })
     setUserHistory(newHistoryArray)
-    localStorageService.setItem(storageKeys.History, [newHistoryArray])
+    localStorageService.setItem(storageKeys.History, newHistoryArray)
   }
 
   return (
