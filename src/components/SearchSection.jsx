@@ -23,11 +23,11 @@ const SearchSection = () => {
   console.log(usersInfo)
 
   const { value } = searchStateRef.current
-  const previousSearch = previousSearchRef.current
+  // const previousSearch = previousSearchRef.current
 
   console.log(' previousSearchRef',  previousSearchRef.current)
 
-  console.log(value)
+
 
   let [searchParams, setSearchParams] = useSearchParams()
 
@@ -36,11 +36,18 @@ const SearchSection = () => {
   let perPageFromURL = Number(searchParams.get('perPage')) || 5
 
   const [currentPage, setCurrentPage] = useState(pageFromURL);
+  const[userHistory, setUserHistory] = useState([])
 
   useEffect(() => {
     if (!queryFromURL) return
     handleSearch(queryFromURL, pageFromURL, perPageFromURL)
   }, [])
+
+  // useEffect(() => {
+  //   if (!queryFromURL) return
+  //   handleSearch(queryFromURL, pageFromURL, perPageFromURL)
+  // }, [previousSearch])
+
 
   const showPreviousSearch = async(prevValue) => {
     setSearchParams({
@@ -50,6 +57,7 @@ const SearchSection = () => {
     })
     searchStateRef.current.value = prevValue
     queryFromURL = prevValue
+    // setUserHistory((userHistory)=>[...userHistory, prevValue])
     await handleSearch(prevValue, 1, perPageFromURL);
 
   }
@@ -58,6 +66,7 @@ const SearchSection = () => {
     if (!valueFromForm) return;
 
     setCurrentPage(1);
+    setUserHistory((userHistory)=>[...userHistory, valueFromForm])
 
     setSearchParams({
       query: valueFromForm,
@@ -84,15 +93,25 @@ const SearchSection = () => {
   )
 
   console.log('searchStateRef', queryFromURL)
+  console.log('userHystory',userHistory)
 
   return (
     <>
       <SearchFormMemo onSubmit={handleUserSearch} searchValue={queryFromURL}  />
-      {previousSearch ? (
-        <div className='previous-search' onClick={() => showPreviousSearch(previousSearch)}>
-          {previousSearch || null}
-        </div>
-      ) : null }
+      {userHistory.length > 0 && (
+        <ul style={{display: 'flex'}}>
+          {userHistory.map((item, index) => (
+            <li key={index}>
+              <div
+                className="previous-search"
+                onClick={() => showPreviousSearch(item)}
+              >
+                {item}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {usersInfo.items?.length && !loading ? (
         <Table
