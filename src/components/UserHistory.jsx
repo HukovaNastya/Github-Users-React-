@@ -1,22 +1,22 @@
-const UserHistory = ({userHistoryData, refetch}) => {
+const UserHistory = ({ userHistoryData, refetch }) => {
   return (
-    <div>
+    <>
       {userHistoryData?.length > 0 ? (
-        <ul style={{ display: 'flex' }}>
-          {userHistoryData.map((item, index) => (
-            <li key={index}>
-              <div
-                className="previous-search"
-                onClick={() => refetch(item)}
-              >
-                {item}
-              </div>
-            </li>
-          ))}
-        </ul>
+        <div className="search-section user_history">
+          <h1 className="search-item_title">Recent Searches:</h1>
+          <ul className="user_history_list">
+            {userHistoryData.map((item, index) => (
+              <li key={index}>
+                <div className="previous-search" onClick={() => refetch(item)}>
+                  {item}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
       ) : null}
-    </div>
+    </>
   )
 }
 
-export default UserHistory;
+export default UserHistory

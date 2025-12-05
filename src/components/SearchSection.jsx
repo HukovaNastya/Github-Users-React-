@@ -90,10 +90,7 @@ const SearchSection = () => {
   return (
     <>
       <SearchFormMemo onSubmit={handleUserSearch} searchValue={queryFromURL} />
-      <UserHistory
-        userHistoryData={userHistory}
-        refetch={showPreviousSearch}
-      />
+      <UserHistory userHistoryData={userHistory} refetch={showPreviousSearch} />
       {usersInfo.items?.length && !loading ? (
         <Table
           theadData={[

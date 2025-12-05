@@ -72,7 +72,7 @@ function useUsersSearch() {
     paginate,
     searchStateRef,
     getListOfUsers,
-    previousSearchRef
+    previousSearchRef,
   }
 }
 

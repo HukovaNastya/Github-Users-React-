@@ -4,12 +4,12 @@ const SearchForm = ({ onSubmit, searchValue = '' }) => {
   // const inputRef = useRef(searchValue)
   //
   // console.log('searchValueInput',searchValue)
-  const [value, setValue] = useState(searchValue);
+  const [value, setValue] = useState(searchValue)
 
   // keep in sync when searchValue changes from outside
   useEffect(() => {
-    setValue(searchValue);
-  }, [searchValue]);
+    setValue(searchValue)
+  }, [searchValue])
 
   return (
     <form
