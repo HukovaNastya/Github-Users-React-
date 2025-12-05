@@ -6,9 +6,12 @@ import useUsersSearch from '../hooks/useUsersSearch.js'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import UserHistory from './UserHistory'
+import localStorageService from '../hooks/useStorage'
 
 const SearchFormMemo = memo(SearchForm)
 const AlertMemo = memo(Alert)
+const storageKeys = localStorageService.LOCAL_STORAGE_KEYS
+
 
 const SearchSection = () => {
   const {
@@ -31,7 +34,10 @@ const SearchSection = () => {
   let perPageFromURL = Number(searchParams.get('perPage')) || 5
 
   const [currentPage, setCurrentPage] = useState(pageFromURL)
-  const [userHistory, setUserHistory] = useState([])
+  const [userHistory, setUserHistory] = useState(() => {
+    const history = localStorageService.getItem(storageKeys.History)
+    return  history || []
+  })
 
   useEffect(() => {
     if (!queryFromURL) return
@@ -56,6 +62,7 @@ const SearchSection = () => {
 
     if (previousSearch && !userHistory.includes(previousSearch)) {
       setUserHistory((prevSearch) => [...prevSearch, previousSearch])
+      localStorageService.setItem(storageKeys.History, [...userHistory, previousSearch])
     }
 
     setCurrentPage(1)
@@ -92,6 +99,7 @@ const SearchSection = () => {
       return index   !== itemIndex
     })
     setUserHistory(newHistoryArray)
+    localStorageService.setItem(storageKeys.History, newHistoryArray)
   }
 
   return (

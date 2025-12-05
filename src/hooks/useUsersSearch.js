@@ -11,7 +11,6 @@ function useUsersSearch() {
   const [usersInfo, setUsersInfo] = useState(() => {
     const users = localStorageService.getItem(storageKeys.Users)
     return users || { items: [], meta: { totalCount: 0 } }
-    // return { items: [], meta: { totalCount: 0 } }
   })
 
   const [error, setError] = useState(null)

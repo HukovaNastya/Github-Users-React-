@@ -1,6 +1,7 @@
 const LOCAL_STORAGE_KEYS = {
   Search: 'search',
   Users: 'users',
+  History: 'history',
 }
 
 const getItem = (key) => {
