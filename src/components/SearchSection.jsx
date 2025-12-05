@@ -5,9 +5,10 @@ import Pagination from './Pagination.jsx'
 import useUsersSearch from '../hooks/useUsersSearch.js'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
+import UserHistory from './UserHistory'
 
 const SearchFormMemo = memo(SearchForm)
-const AlertMemo =memo(Alert)
+const AlertMemo = memo(Alert)
 
 const SearchSection = () => {
   const {
@@ -20,14 +21,8 @@ const SearchSection = () => {
     previousSearchRef,
   } = useUsersSearch()
 
-  console.log(usersInfo)
-
   const { value } = searchStateRef.current
-  // const previousSearch = previousSearchRef.current
-
-  console.log(' previousSearchRef',  previousSearchRef.current)
-
-
+  let previousSearch = previousSearchRef.current
 
   let [searchParams, setSearchParams] = useSearchParams()
 
@@ -35,46 +30,46 @@ const SearchSection = () => {
   let pageFromURL = Number(searchParams.get('page')) || 1
   let perPageFromURL = Number(searchParams.get('perPage')) || 5
 
-  const [currentPage, setCurrentPage] = useState(pageFromURL);
-  const[userHistory, setUserHistory] = useState([])
+  const [currentPage, setCurrentPage] = useState(pageFromURL)
+  const [userHistory, setUserHistory] = useState([])
 
   useEffect(() => {
     if (!queryFromURL) return
     handleSearch(queryFromURL, pageFromURL, perPageFromURL)
   }, [])
 
-  // useEffect(() => {
-  //   if (!queryFromURL) return
-  //   handleSearch(queryFromURL, pageFromURL, perPageFromURL)
-  // }, [previousSearch])
-
-
-  const showPreviousSearch = async(prevValue) => {
+  const showPreviousSearch = async (prevValue) => {
     setSearchParams({
       query: prevValue,
       page: 1,
-      perPage:perPageFromURL,
+      perPage: perPageFromURL,
     })
+
     searchStateRef.current.value = prevValue
     queryFromURL = prevValue
-    // setUserHistory((userHistory)=>[...userHistory, prevValue])
-    await handleSearch(prevValue, 1, perPageFromURL);
 
+    await handleSearch(prevValue, 1, perPageFromURL)
   }
 
   const handleUserSearch = async (valueFromForm) => {
-    if (!valueFromForm) return;
+    if (!valueFromForm) return
 
-    setCurrentPage(1);
-    setUserHistory((userHistory)=>[...userHistory, valueFromForm])
+    if (previousSearch && !userHistory.includes(previousSearch)) {
+      setUserHistory((prevSearch) => [...prevSearch, previousSearch])
+    }
+
+    setCurrentPage(1)
 
     setSearchParams({
       query: valueFromForm,
       page: 1,
-      perPage: perPageFromURL
-    });
+      perPage: perPageFromURL,
+    })
 
-    await handleSearch(valueFromForm, 1, perPageFromURL);
+    await handleSearch(valueFromForm, 1, perPageFromURL)
+
+    previousSearchRef.current = valueFromForm
+    searchStateRef.current.value = valueFromForm
   }
 
   const handlePageChange = useCallback(
@@ -84,7 +79,7 @@ const SearchSection = () => {
       setSearchParams({
         query: queryFromURL,
         page,
-        perPage:perPageFromURL,
+        perPage: perPageFromURL,
       })
 
       await paginate(page, perPageFromURL)
@@ -92,27 +87,13 @@ const SearchSection = () => {
     [paginate, setSearchParams],
   )
 
-  console.log('searchStateRef', queryFromURL)
-  console.log('userHystory',userHistory)
-
   return (
     <>
-      <SearchFormMemo onSubmit={handleUserSearch} searchValue={queryFromURL}  />
-      {userHistory.length > 0 && (
-        <ul style={{display: 'flex'}}>
-          {userHistory.map((item, index) => (
-            <li key={index}>
-              <div
-                className="previous-search"
-                onClick={() => showPreviousSearch(item)}
-              >
-                {item}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-
+      <SearchFormMemo onSubmit={handleUserSearch} searchValue={queryFromURL} />
+      <UserHistory
+        userHistoryData={userHistory}
+        refetch={showPreviousSearch}
+      />
       {usersInfo.items?.length && !loading ? (
         <Table
           theadData={[
